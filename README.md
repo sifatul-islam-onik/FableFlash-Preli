@@ -5,19 +5,31 @@ QueueStorm Investigator is a high-performance, robust, and secure AI/API copilot
 ---
 
 ## Table of Contents
-1. [System Architecture](#1-system-architecture)
-2. [Technology Stack](#2-technology-stack)
-3. [Setup and Run Instructions](#3-setup-and-run-instructions)
-4. [Run with Docker](#4-run-with-docker)
-5. [API Documentation](#5-api-documentation)
-6. [AI and Model Usage](#6-ai-and-model-usage)
-7. [Safety Logic and Guardrails](#7-safety-logic-and-guardrails)
-8. [Known Limitations](#8-known-limitations)
-9. [Verification and Tests](#9-verification-and-tests)
+1. [Live Deployment](#1-live-deployment) — [fable-flash-preli.vercel.app](https://fable-flash-preli.vercel.app/)
+2. [System Architecture](#2-system-architecture)
+3. [Technology Stack](#3-technology-stack)
+4. [Setup and Run Instructions](#4-setup-and-run-instructions)
+5. [Run with Docker](#5-run-with-docker)
+6. [API Documentation](#6-api-documentation)
+7. [AI and Model Usage](#7-ai-and-model-usage)
+8. [Safety Logic and Guardrails](#8-safety-logic-and-guardrails)
+9. [Known Limitations](#9-known-limitations)
+10. [Verification and Tests](#10-verification-and-tests)
 
 ---
 
-## 1. System Architecture
+## 1. Live Deployment
+
+The service is deployed live and is reachable at:
+👉 **URL**: [https://fable-flash-preli.vercel.app/](https://fable-flash-preli.vercel.app/)
+
+The standard endpoints exposed on the deployment are:
+* **Health Check**: `GET /health`
+* **Analyze Ticket**: `POST /analyze-ticket`
+
+---
+
+## 2. System Architecture
 
 QueueStorm Investigator uses a **Hybrid Rule-Based + LLM Architecture**. The core reasoning (transaction matching, classification, routing, severity scoring, and escalation) is handled deterministically via rule-based python engines. The LLM (via Groq) is used strictly for high-quality language understanding and text generation (summaries and customer replies). Finally, a programmatic post-processing safety guardrail acts as the final line of defense.
 
@@ -71,7 +83,7 @@ flowchart TB
 
 ---
 
-## 2. Technology Stack
+## 3. Technology Stack
 
 * **Core Framework**: Python 3.10+, FastAPI (Asynchronous web framework)
 * **Web Server**: Uvicorn (ASGI server)
@@ -82,7 +94,7 @@ flowchart TB
 
 ---
 
-## 3. Setup and Run Instructions
+## 4. Setup and Run Instructions
 
 ### Prerequisites
 * Python 3.10 or higher installed on your system.
@@ -132,23 +144,35 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ---
 
-## 4. Run with Docker
+## 5. Run with Docker
 
-You can build and run the application as a lightweight Docker container.
+You can run the application as a lightweight Docker container by either pulling the pre-built image from Docker Hub or building it locally.
 
+### Option A: Pull from Docker Hub (Recommended)
+1. **Pull the image**:
+   ```bash
+   docker pull sifatul67/queuestorm-investigator:latest
+   ```
+
+2. **Run the container** (passing your `.env` file for configuration):
+   ```bash
+   docker run -p 8000:8000 --env-file .env sifatul67/queuestorm-investigator:latest
+   ```
+
+### Option B: Build and Run Locally
 1. **Build the Docker Image**:
    ```bash
    docker build -t queuestorm-investigator .
    ```
 
-2. **Run the Container** (passing your env file):
+2. **Run the Container**:
    ```bash
    docker run -p 8000:8000 --env-file .env queuestorm-investigator
    ```
 
 ---
 
-## 5. API Documentation
+## 6. API Documentation
 
 ### 1. Health Endpoint
 * **Route**: `GET /health`
@@ -167,7 +191,7 @@ You can build and run the application as a lightweight Docker container.
 
 ---
 
-## 6. AI and Model Usage
+## 7. AI and Model Usage
 
 * **Primary Model**: `openai/gpt-oss-120b` (or Groq's available models)
 * **Location**: Deployed via Groq's high-speed cloud inference engine.
@@ -176,7 +200,7 @@ You can build and run the application as a lightweight Docker container.
 
 ---
 
-## 7. Safety Logic and Guardrails
+## 8. Safety Logic and Guardrails
 
 Fintech safety is a hard requirement. The following rules are enforced programmatically in the safety guardrails layer, bypassing/sanitizing LLM outputs if needed:
 
@@ -195,7 +219,7 @@ Fintech safety is a hard requirement. The following rules are enforced programma
 
 ---
 
-## 8. Known Limitations
+## 9. Known Limitations
 
 1. **Mixed-Language Complexity**: Extremely complex Bengali-English code-switching (Banglish) might result in minor grammatical errors in the LLM-generated summaries, though safety rules and keywords remain intact.
 2. **Context-Free Tickets**: If both transaction history is empty and the complaint text contains no identifiers or descriptions (e.g., *"Check my money"*), the system falls back to `insufficient_data` and asks for clarification, which is expected behavior.
@@ -203,7 +227,7 @@ Fintech safety is a hard requirement. The following rules are enforced programma
 
 ---
 
-## 9. Verification and Tests
+## 10. Verification and Tests
 
 A complete suite of 29 automated test cases validates functionality, covering health checks, input validation errors, prompt injection vulnerabilities, and all 10 problem statement sample cases.
 
