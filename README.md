@@ -15,6 +15,7 @@ QueueStorm Investigator is a high-performance, robust, and secure AI/API copilot
 8. [Safety Logic and Guardrails](#8-safety-logic-and-guardrails)
 9. [Known Limitations](#9-known-limitations)
 10. [Verification and Tests](#10-verification-and-tests)
+11. [CI/CD Workflow](#11-cicd-workflow)
 
 ---
 
@@ -235,3 +236,14 @@ To run the test suite:
 ```bash
 pytest
 ```
+
+---
+
+## 11. CI/CD Workflow
+
+A GitHub Actions CI/CD workflow is configured in [.github/workflows/ci.yml](file:///e:/CSE/CODES/github/FableFlash-Preli/.github/workflows/ci.yml).
+
+### Features:
+* **Automated Testing**: Runs the complete `pytest` test suite on every push and pull request to the `main` branch.
+* **Build Verification**: Verifies that the Docker image builds successfully on every pull request.
+* **Auto-Publish to Docker Hub**: When you add `DOCKER_USERNAME` and `DOCKER_PASSWORD` to your repository's GitHub Secrets, any push to `main` will automatically build and publish the updated Docker image to `sifatul67/queuestorm-investigator:latest` and tag it with the commit SHA.
