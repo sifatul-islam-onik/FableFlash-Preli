@@ -146,7 +146,11 @@ class SafetyGuardrails:
         # Replace actual newline/carriage return characters
         text = text.replace("\n", " ").replace("\r", " ")
         # Collapse multiple spaces
-        return re.sub(r"\s+", " ", text).strip()
+        text = re.sub(r"\s+", " ", text).strip()
+        # Collapse safety substitution duplicate phrases/words
+        text = re.sub(r"\b(any\s+eligible)\s+\1\b", r"\1", text, flags=re.IGNORECASE)
+        text = re.sub(r"\b(any)\s+\1\b", r"\1", text, flags=re.IGNORECASE)
+        return text
 
     def _check_credential_requests(
         self, text: str, language: str | None
