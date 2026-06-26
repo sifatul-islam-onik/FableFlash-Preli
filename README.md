@@ -66,7 +66,7 @@ flowchart TB
 * **Case Classifier**: Classifies tickets into 8 case types and routes them to 6 specific departments using keyword and pattern matching.
 * **Severity Scorer**: Scores severity (`low`, `medium`, `high`, `critical`) strictly according to platform rules.
 * **Escalation Decider**: Determines `human_review_required`. Correctly skips human review for tickets that need customer clarification (`insufficient_data` verdict) to keep the support agent's queue clear of vague/ambiguous tickets.
-* **Groq API Client**: Communicates with the LLM. Supports automatic dual-key failover to switch from key 1 to key 2 upon hitting HTTP 429 rate limits, and falls back to a template-based generator if both keys fail.
+* **Groq API Client**: Communicates with the LLM. Supports automatic dynamic key failover across any number of keys matching `GROQ_API_KEY_*` (e.g. key 1, key 2, key 3, etc.) sequentially upon hitting HTTP 429 rate limits, and falls back to a template-based generator if all keys fail.
 * **Safety Guardrails**: Scans generated outputs for credit card/PIN/OTP requests, unauthorized refund/reversal promises, and third-party references. It strips all newline characters (`\n`, `\r`) from text fields to guarantee flat, single-line strings.
 
 ---
@@ -122,7 +122,7 @@ flowchart TB
    GROQ_MODEL=openai/gpt-oss-120b
    PORT=8000
    ```
-2. Replace `your_first_groq_key_here` and `your_second_groq_key_here` with your actual Groq API keys. (If no keys are configured, the application automatically uses the deterministic fallback template generator for text fields).
+2. Replace `your_first_groq_key_here` and `your_second_groq_key_here` with your actual Groq API keys. You can add more keys as well (`GROQ_API_KEY_3`, `GROQ_API_KEY_4`, etc.) which will be automatically detected and used in order. (If no keys are configured, the application automatically uses the deterministic fallback template generator for text fields).
 
 ### Running the Application
 Run the ASGI server using Uvicorn:
