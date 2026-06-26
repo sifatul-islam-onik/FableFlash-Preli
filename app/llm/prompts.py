@@ -41,7 +41,7 @@ Return a JSON object with exactly these three fields:
 
 ### customer_reply
 - Safe, professional reply to send to the customer.
-- MUST be extremely short, direct, and concise (ideally 3 to 4 sentences max, under 50 words).
+- MUST be extremely short, direct, and concise (ideally 2 to 4 sentences max, under 40 words).
 - DO NOT include any greetings (like "Dear Customer,") or sign-offs (like "Sincerely", "Regards").
 - DO NOT include any newline characters (\n) or paragraph breaks. Keep it on a single line.
 - The User Type (e.g. 'merchant', 'customer', 'agent') should influence the response tone: use a business-formal, professional tone for 'merchant' and 'agent', and a helpful, polite tone for 'customer'.
